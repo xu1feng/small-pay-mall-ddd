@@ -1,0 +1,1 @@
+docker stop small-pay-mall-ddd

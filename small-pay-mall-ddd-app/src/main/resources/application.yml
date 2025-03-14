@@ -1,0 +1,5 @@
+spring:
+  config:
+    name: small-pay-mall-ddd-app
+  profiles:
+    active: dev

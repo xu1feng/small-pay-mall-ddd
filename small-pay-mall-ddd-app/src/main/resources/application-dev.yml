@@ -35,6 +35,9 @@ weixin:
   config:
     originalid: gh_a97b1ad5b10f
     token: b8b6
+    app-id: wxc16ffef8ada4e8e2
+    app-secret: 7e23cb0541935a6f040127df737858fe
+    template_id: 11aimp56v9ZQxRmdJn4eSm6gBP-YWJILErs-pj5TMyE
 
 # MyBatis 配置【如需使用记得打开】
 #mybatis:

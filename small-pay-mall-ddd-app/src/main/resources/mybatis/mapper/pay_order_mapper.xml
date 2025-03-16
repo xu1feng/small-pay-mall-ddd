@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.xyf.infrastructure.dao.IOrderDao">
+
+    <resultMap id="dataMap" type="edu.xyf.infrastructure.dao.po.PayOrder">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="order_id" property="orderId"/>
+        <result column="order_time" property="orderTime"/>
+        <result column="total_amount" property="totalAmount"/>
+        <result column="status" property="status"/>
+        <result column="pay_url" property="payUrl"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    
+    <insert id="insert" parameterType="edu.xyf.infrastructure.dao.po.PayOrder">
+        insert into pay_order(user_id, product_id, product_name, order_id, order_time,
+                              total_amount, status, create_time, update_time)
+        values(#{userId}, #{productId}, #{productName}, #{orderId}, #{orderTime},
+               #{totalAmount}, #{status}, now(), now())
+    </insert>
+
+    <select id="queryUnpaidOrder" parameterType="edu.xyf.infrastructure.dao.po.PayOrder" resultMap="dataMap">
+        select product_id, product_name, order_id, order_time, total_amount, status, pay_url
+        from pay_order
+        where user_id = #{userId} and product_id = #{productId}
+        order by id desc
+        limit 1
+    </select>
+
+</mapper>

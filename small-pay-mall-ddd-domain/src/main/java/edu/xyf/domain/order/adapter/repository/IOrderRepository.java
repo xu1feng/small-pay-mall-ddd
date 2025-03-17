@@ -2,6 +2,7 @@ package edu.xyf.domain.order.adapter.repository;
 
 import edu.xyf.domain.order.model.aggregate.CreateOrderAggregate;
 import edu.xyf.domain.order.model.entity.OrderEntity;
+import edu.xyf.domain.order.model.entity.PayOrderEntity;
 import edu.xyf.domain.order.model.entity.ShopCartEntity;
 
 /**
@@ -15,5 +16,7 @@ public interface IOrderRepository {
     void doSaveOrder(CreateOrderAggregate orderAggregate);
 
     OrderEntity queryUnPayOrder(ShopCartEntity shopCartEntity);
+
+    void updateOrderPayInfo(PayOrderEntity payOrderEntity);
 
 }

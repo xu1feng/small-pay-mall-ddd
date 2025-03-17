@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品下单支付页</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+        text-align: center; /* 添加居中对齐 */
+    }
+    .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .product-info {
+        margin-bottom: 20px;
+        border: 1px solid #ddd; /* 添加边框 */
+        padding: 10px; /* 添加内边距 */
+        text-align: center; /* 添加居中对齐 */
+    }
+    .product-info h2 {
+        margin: 0;
+        margin-bottom: 5px;
+    }
+    .product-info p {
+        font-size: 36px; /* 加大字体 */
+        font-weight: bold; /* 加粗字体 */
+        color: red; /* 字体颜色改为红色 */
+        margin: 0; /* 移除默认的margin */
+        margin-top: 20px;
+    }
+    .order-button {
+        display: block;
+        width: calc(100% - 40px); /* 减去padding的宽度 */
+        padding: 10px;
+        margin: 10px auto; /* 添加自动外边距实现居中 */
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        cursor: pointer;
+        border-radius: 20px; /* 添加圆角 */
+    }
+    .order-button:hover {
+        background-color: #0056b3;
+    }
+    .account-info {
+        font-size: 12px; /* 设置字体大小为9号 */
+        text-align: center; /* 居中对齐 */
+        display: block; /* 使span表现得像块级元素 */
+        margin: 10px 0; /* 添加上下外边距 */
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="product-info">
+        <h2>美女程序员 - 同款机械键盘</h2>
+
+        <img width="350" src="images/sku-keyboard-001.png"/>
+        <p>价格：¥1.68</p>
+    </div>
+    <button id="orderButton" class="order-button">立即下单「沙箱支付」</button>
+    <span class="account-info">测试账号：kvhmoj3832@sandbox.com 密码：111111 支付：111111</span>
+</div>
+
+<script>
+function getCookie(name) {
+    let cookieArr = document.cookie.split(";");
+    for(let i = 0; i < cookieArr.length; i++) {
+        let cookiePair = cookieArr[i].split("=");
+        if(name == cookiePair[0].trim()) {
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+    return null;
+}
+
+document.getElementById('orderButton').addEventListener('click', function() {
+    var userId = getCookie("loginToken");
+    if (!userId) {
+        window.location.href = "login.html"; // 跳转到登录页
+        return;
+    }
+
+    var productId = "100010090091";
+    var url = 'http://127.0.0.1:8091/api/v1/alipay/create_pay_order';
+
+    var requestBody = {
+        userId: userId,
+        productId: productId
+    };
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody) // 将请求体转换为JSON字符串
+    })
+    .then(response => response.json()) // 解析JSON格式的响应
+    .then(json => {
+        if (json.code === "0000") { // 假设成功的code是"0000"
+            var formHtml = json.data; // 获取data字段中的HTML表单字符串
+            document.body.innerHTML += formHtml; // 将表单添加到页面上
+            document.forms[0].submit(); // 自动提交表单
+        } else {
+            console.error('Error:', json.info); // 输出错误信息
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+</body>
+</html>
+

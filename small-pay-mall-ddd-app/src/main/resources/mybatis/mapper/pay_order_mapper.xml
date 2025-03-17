@@ -24,6 +24,11 @@
                #{totalAmount}, #{status}, now(), now())
     </insert>
 
+    <update id="updateOrderPayInfo" parameterType="edu.xyf.infrastructure.dao.po.PayOrder">
+        update pay_order set pay_url = #{payUrl}, status = #{status}, update_time = now()
+        where order_id = #{orderId}
+    </update>
+
     <select id="queryUnpaidOrder" parameterType="edu.xyf.infrastructure.dao.po.PayOrder" resultMap="dataMap">
         select product_id, product_name, order_id, order_time, total_amount, status, pay_url
         from pay_order

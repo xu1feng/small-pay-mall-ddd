@@ -3,6 +3,7 @@ package edu.xyf.infrastructure.adapter.repository;
 import edu.xyf.domain.order.adapter.repository.IOrderRepository;
 import edu.xyf.domain.order.model.aggregate.CreateOrderAggregate;
 import edu.xyf.domain.order.model.entity.OrderEntity;
+import edu.xyf.domain.order.model.entity.PayOrderEntity;
 import edu.xyf.domain.order.model.entity.ProductEntity;
 import edu.xyf.domain.order.model.entity.ShopCartEntity;
 import edu.xyf.domain.order.model.valobj.OrderStatusVO;
@@ -59,6 +60,17 @@ public class OrderRepository implements IOrderRepository {
                 .totalAmount(order.getTotalAmount())
                 .payUrl(order.getPayUrl())
                 .build();
+    }
+
+    @Override
+    public void updateOrderPayInfo(PayOrderEntity payOrderEntity) {
+        PayOrder payOrderReq = PayOrder.builder()
+                .userId(payOrderEntity.getUserId())
+                .orderId(payOrderEntity.getOrderId())
+                .status(payOrderEntity.getOrderStatusVO().getCode())
+                .payUrl(payOrderEntity.getPayUrl())
+                .build();
+        orderDao.updateOrderPayInfo(payOrderReq);
     }
 
 }

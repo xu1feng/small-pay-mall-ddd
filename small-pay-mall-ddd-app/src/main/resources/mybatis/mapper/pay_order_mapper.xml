@@ -16,7 +16,7 @@
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
     </resultMap>
-    
+
     <insert id="insert" parameterType="edu.xyf.infrastructure.dao.po.PayOrder">
         insert into pay_order(user_id, product_id, product_name, order_id, order_time,
                               total_amount, status, create_time, update_time)
@@ -24,17 +24,41 @@
                #{totalAmount}, #{status}, now(), now())
     </insert>
 
-    <update id="updateOrderPayInfo" parameterType="edu.xyf.infrastructure.dao.po.PayOrder">
-        update pay_order set pay_url = #{payUrl}, status = #{status}, update_time = now()
-        where order_id = #{orderId}
-    </update>
-
     <select id="queryUnpaidOrder" parameterType="edu.xyf.infrastructure.dao.po.PayOrder" resultMap="dataMap">
         select product_id, product_name, order_id, order_time, total_amount, status, pay_url
         from pay_order
         where user_id = #{userId} and product_id = #{productId}
         order by id desc
         limit 1
+    </select>
+
+    <update id="updateOrderPayInfo" parameterType="edu.xyf.infrastructure.dao.po.PayOrder">
+        update pay_order set pay_url = #{payUrl}, status = #{status}, update_time = now()
+        where order_id = #{orderId}
+    </update>
+
+    <update id="changeOrderPaySuccess" parameterType="edu.xyf.infrastructure.dao.po.PayOrder">
+        update pay_order set status = #{status}, pay_time = now(), update_time = now()
+        where order_id = #{orderId}
+    </update>
+
+    <update id="changeOrderClose" parameterType="java.lang.String">
+        update pay_order set status = 'CLOSE', pay_time = now(), update_time = now()
+        where order_id = #{orderId}
+    </update>
+
+    <select id="queryTimeoutCloseOrderList" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT order_id as orderId FROM pay_order
+        WHERE status = 'PAY_WAIT' AND NOW() >= order_time + INTERVAL 30 MINUTE
+        ORDER BY id ASC
+        LIMIT 50
+    </select>
+
+    <select id="queryNoPayNotifyOrder" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT order_id as orderId FROM pay_order
+        WHERE status = 'PAY_WAIT' AND NOW() >= order_time + INTERVAL 1 MINUTE
+        ORDER BY id ASC
+        LIMIT 10
     </select>
 
 </mapper>

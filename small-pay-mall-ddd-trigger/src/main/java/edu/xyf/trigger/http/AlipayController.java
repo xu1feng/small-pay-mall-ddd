@@ -74,7 +74,7 @@ public class AlipayController implements IPayService {
     /**
      * http://xyf-s-pay-mall.natapp1.cc/api/v1/alipay/alipay_notify_url
      */
-    @RequestMapping(value = "alipay_notify_url", method = RequestMethod.POST)
+    @RequestMapping(value = "pay_notify_url", method = RequestMethod.POST)
     public String payNotify(HttpServletRequest request) throws AlipayApiException {
         log.info("支付回调，消息接收 {}", request.getParameter("trade_status"));
 
@@ -110,6 +110,8 @@ public class AlipayController implements IPayService {
         log.info("支付回调，买家付款时间: {}", params.get("gmt_payment"));
         log.info("支付回调，买家付款金额: {}", params.get("buyer_pay_amount"));
         log.info("支付回调，支付回调，更新订单 {}", tradeNo);
+
+        orderService.changeOrderPaySuccess(tradeNo);
 
         return "success";
     }

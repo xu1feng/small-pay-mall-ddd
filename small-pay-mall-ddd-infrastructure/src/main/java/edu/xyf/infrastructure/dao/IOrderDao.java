@@ -3,6 +3,8 @@ package edu.xyf.infrastructure.dao;
 import edu.xyf.infrastructure.dao.po.PayOrder;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @author Xuyifeng
  * @description
@@ -17,4 +19,11 @@ public interface IOrderDao {
 
     void updateOrderPayInfo(PayOrder payOrderReq);
 
+    void changeOrderPaySuccess(PayOrder payOrderReq);
+
+    List<String> queryNoPayNotifyOrder();
+
+    List<String> queryTimeoutCloseOrderList();
+
+    boolean changeOrderClose();
 }
